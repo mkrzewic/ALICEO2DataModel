@@ -1,0 +1,50 @@
+\documentclass[a4paper,twoside]{article}
+\usepackage{graphicx}
+\usepackage{lineno}
+\usepackage{url}
+\usepackage[natbib=true]{biblatex}
+\addbibresource{o2bibliography.bib}
+
+\linenumbers
+
+\def\O2{O$^2$}
+
+\begin{document}
+
+\title{ALICE \O2 data model proposal}
+
+\author{Mikolaj Krzewicki \and Sylvain Chapelain \and Roberto Divia \and Matthias Richter \and David Rohr}
+\date{
+for the CWG4 data model group.\\[2ex]
+\today
+}
+\maketitle
+
+\section{Introduction}
+
+The ALICE online-offline (\O2) computing system \cite{o2tdr,o2} is a computing facility and a software framework designed for the processing of the ALICE data in the upcoming LHC Run 3.
+The design aims at high data throughput and parallelism using a multiprocess model.
+It does not, however, exclude the use of multithreading and other forms of concurrent processing inside of individual processes.
+
+The data exchange between processes running within the \O2 system (called \O2 devices) is taken care of by the ALICE-FAIR (Alfa ) framework \cite{alfa}. Since this is the only communication mechanism foreseen for data exchange, it effectively serves the role of an API between the devices.
+The Alfa framework provides data transport and synchronisation primitives via the FairMQ message queue library. FairMQ messages consist of raw memory buffers which are asynchronously queued and atomically delivered.
+
+The data processed by the \O2 system consists of a set of buffers originating from both the detector hardware and the processing components. The data fragments are logically grouped into (sub-) time frames. A (sub-) time frame contains the data associated to a period of data taking (typically several tens of ms) and/or the results of processing of these data plus any additional metadata that might be necessary to describe and qualify the data set.
+
+\section{Vectored IO}
+
+Vectored IO is an important feature when dealing with multiple data buffers as it allows, in principle, to avoid the cost associated with serializing data into a single IO buffer.
+Vectored IO in FairMQ is provided in the form of multi-part messages consisting of multiple buffers which are delivered atomically while preserving the initial ordering.
+
+
+\section{Message structure}
+
+\section{Metadata format}
+
+\section{Data formats}
+
+\section{Interfaces}
+
+\printbibliography
+
+\end{document}

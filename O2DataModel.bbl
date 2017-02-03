@@ -1,0 +1,139 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.7 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \sortlist[entry]{nty/global/}
+    \entry{o2tdr}{report}{}
+      \name{author}{2}{}{%
+        {{hash=f9c5af158a0d9e0f138f7ef116282552}{%
+           family={P.},
+           family_i={P\bibinitperiod},
+           given={Buncic},
+           given_i={B\bibinitperiod}}}%
+        {{hash=ca6620ec5461b62cc8aa8b9e82d0d557}{%
+           family={Collaboration},
+           family_i={C\bibinitperiod},
+           given={The\bibnamedelima ALICE},
+           given_i={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{0c216eb0ac85ba340d80f8be171bf872}
+      \strng{fullhash}{0c216eb0ac85ba340d80f8be171bf872}
+      \field{sortinit}{P}
+      \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{ALICE-TDR-019 CERN-LHCC-2015-006}
+      \field{title}{Technical Design Report for the Upgrade of the Online-Offline Computing System.}
+      \field{type}{techreport}
+      \field{year}{2015}
+    \endentry
+    \entry{o2}{online}{}
+      \field{sortinit}{T}
+      \field{sortinithash}{423d138a005a533b47e6475e39378bf2}
+      \field{labeltitlesource}{title}
+      \field{title}{The Alice O2 software}
+      \verb{url}
+      \verb https://github.com/AliceO2Group
+      \endverb
+    \endentry
+    \entry{alfa}{article}{}
+      \name{author}{12}{}{%
+        {{hash=fa8023a398ede907cd9cfdb1b6584229}{%
+           family={Al-Turany},
+           family_i={A\bibinithyphendelim T\bibinitperiod},
+           given={M.},
+           given_i={M\bibinitperiod}}}%
+        {{hash=89ec3466a78f621005148d3b9198d149}{%
+           family={Buncic},
+           family_i={B\bibinitperiod},
+           given={P.},
+           given_i={P\bibinitperiod}}}%
+        {{hash=d6daf8c755cf2020b7abfc8038e19ffb}{%
+           family={Hristov},
+           family_i={H\bibinitperiod},
+           given={P.},
+           given_i={P\bibinitperiod}}}%
+        {{hash=fedc2c022520eceeda7986b2eb3430b7}{%
+           family={Kollegger},
+           family_i={K\bibinitperiod},
+           given={T.},
+           given_i={T\bibinitperiod}}}%
+        {{hash=c597996a0ac1bd14cf8e381e03184c55}{%
+           family={Kouzinopoulos},
+           family_i={K\bibinitperiod},
+           given={C.},
+           given_i={C\bibinitperiod}}}%
+        {{hash=361044fee7ba4e7bade0e7dbc745ea11}{%
+           family={Lebedev},
+           family_i={L\bibinitperiod},
+           given={A.},
+           given_i={A\bibinitperiod}}}%
+        {{hash=621ed3e75908cbb445e87630ea9f9402}{%
+           family={Lindenstruth},
+           family_i={L\bibinitperiod},
+           given={V.},
+           given_i={V\bibinitperiod}}}%
+        {{hash=6f40578b4b6be9f6d6e4e630480f038d}{%
+           family={Manafov},
+           family_i={M\bibinitperiod},
+           given={A.},
+           given_i={A\bibinitperiod}}}%
+        {{hash=1f87c4d47f141997fcf0a09c9c5ac58f}{%
+           family={Richter},
+           family_i={R\bibinitperiod},
+           given={M.},
+           given_i={M\bibinitperiod}}}%
+        {{hash=86063282800293d0821aba47237936d7}{%
+           family={Rybalchenko},
+           family_i={R\bibinitperiod},
+           given={A.},
+           given_i={A\bibinitperiod}}}%
+        {{hash=14417c963e16be1731f810a2e4ccc74f}{%
+           family={Vyvre},
+           family_i={V\bibinitperiod},
+           given={P.\bibnamedelimi Vande},
+           given_i={P\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=5b1f83ead83734cb524bbdb17152f8bb}{%
+           family={Winckler},
+           family_i={W\bibinitperiod},
+           given={N.},
+           given_i={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{ea60ab218697a296489fc60e9be91f2d}
+      \strng{fullhash}{7377328f2ce748e36ab4cf42dace6077}
+      \field{sortinit}{T}
+      \field{sortinithash}{423d138a005a533b47e6475e39378bf2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{The commonalities between the ALICE and FAIR experiments and their computing requirements led to the development of large parts of a common software framework in an experiment independent way. The FairRoot project has already shown the feasibility of such an approach for the FAIR experiments and extending it beyond FAIR to experiments at other facilities[1, 2]. The ALFA framework is a joint development between ALICE Online- Offline (O 2 ) and FairRoot teams. ALFA is designed as a flexible, elastic system, which balances reliability and ease of development with performance using multi-processing and multithreading. A message- based approach has been adopted; such an approach will support the use of the software on different hardware platforms, including heterogeneous systems. Each process in ALFA assumes limited communication and reliance on other processes. Such a design will add horizontal scaling (multiple processes) to vertical scaling provided by multiple threads to meet computing and throughput demands. ALFA does not dictate any application protocols. Potentially, any content-based processor or any source can change the application protocol. The framework supports different serialization standards for data exchange between different hardware and software languages.}
+      \field{journaltitle}{Journal of Physics: Conference Series}
+      \field{number}{7}
+      \field{title}{ALFA: The new ALICE-FAIR software framework}
+      \field{volume}{664}
+      \field{year}{2015}
+      \field{pages}{072001}
+      \range{pages}{1}
+      \verb{url}
+      \verb http://stacks.iop.org/1742-6596/664/i=7/a=072001
+      \endverb
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
+
