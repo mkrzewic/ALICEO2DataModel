@@ -18,7 +18,7 @@
 
 
 \refsection{0}
-  \sortlist[entry]{nty/global/}
+  \sortlist[entry]{none/global/}
     \entry{o2tdr}{report}{}
       \name{author}{2}{}{%
         {{hash=f9c5af158a0d9e0f138f7ef116282552}{%
@@ -34,8 +34,8 @@
       }
       \strng{namehash}{0c216eb0ac85ba340d80f8be171bf872}
       \strng{fullhash}{0c216eb0ac85ba340d80f8be171bf872}
-      \field{sortinit}{P}
-      \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{number}{ALICE-TDR-019 CERN-LHCC-2015-006}
@@ -44,8 +44,8 @@
       \field{year}{2015}
     \endentry
     \entry{o2}{online}{}
-      \field{sortinit}{T}
-      \field{sortinithash}{423d138a005a533b47e6475e39378bf2}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labeltitlesource}{title}
       \field{title}{The Alice O2 software}
       \verb{url}
@@ -117,8 +117,8 @@
       }
       \strng{namehash}{ea60ab218697a296489fc60e9be91f2d}
       \strng{fullhash}{7377328f2ce748e36ab4cf42dace6077}
-      \field{sortinit}{T}
-      \field{sortinithash}{423d138a005a533b47e6475e39378bf2}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{abstract}{The commonalities between the ALICE and FAIR experiments and their computing requirements led to the development of large parts of a common software framework in an experiment independent way. The FairRoot project has already shown the feasibility of such an approach for the FAIR experiments and extending it beyond FAIR to experiments at other facilities[1, 2]. The ALFA framework is a joint development between ALICE Online- Offline (O 2 ) and FairRoot teams. ALFA is designed as a flexible, elastic system, which balances reliability and ease of development with performance using multi-processing and multithreading. A message- based approach has been adopted; such an approach will support the use of the software on different hardware platforms, including heterogeneous systems. Each process in ALFA assumes limited communication and reliance on other processes. Such a design will add horizontal scaling (multiple processes) to vertical scaling provided by multiple threads to meet computing and throughput demands. ALFA does not dictate any application protocols. Potentially, any content-based processor or any source can change the application protocol. The framework supports different serialization standards for data exchange between different hardware and software languages.}
@@ -131,6 +131,27 @@
       \range{pages}{1}
       \verb{url}
       \verb http://stacks.iop.org/1742-6596/664/i=7/a=072001
+      \endverb
+    \endentry
+    \entry{O2readout}{report}{}
+      \name{author}{1}{}{%
+        {{hash=90988df18c4a506db82d5d5cb8931652}{%
+           family={A.\bibnamedelimi Kluge},
+           family_i={A\bibinitperiod\bibinitdelim K\bibinitperiod},
+           given={P.\bibnamedelimi Vande\bibnamedelima Vyvre},
+           given_i={P\bibinitperiod\bibinitdelim V\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+      }
+      \strng{namehash}{90988df18c4a506db82d5d5cb8931652}
+      \strng{fullhash}{90988df18c4a506db82d5d5cb8931652}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{DRAFT ALICE-TECH-2016-001}
+      \field{title}{The detector read-out in ALICE during Run 3 and 4}
+      \field{type}{techreport}
+      \verb{url}
+      \verb http://svnweb.cern.ch/world/wsvn/alicetdrrun3/Notes/Run34SystemNote/detector-read-alice/ALICErun34_readout.pdf
       \endverb
     \endentry
   \endsortlist
