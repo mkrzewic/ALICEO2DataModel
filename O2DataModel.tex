@@ -2,6 +2,8 @@
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage{listings}
+\usepackage{float}
+\usepackage[width=0.89\textwidth]{caption}
 
 \usepackage[natbib=true,
     style=numeric,
@@ -57,9 +59,10 @@ The multi-part approach, in addition to minimizing the resource strain associate
 The \O2 message consists of a sequence of metadata-payload pairs contained within a multi-part message. Each payload is described by metadata contained in a separate message part. Since FairMQ preserves the ordering of the parts, the natural choice is to precede each data part with the associated metadata part in the message, as illustrated in figure \ref{fig:o2message}. 
 
 \begin{figure}[h]
-\centering
-\includegraphics[width=0.89\textwidth]{multipartO2message.pdf}
-\caption{\label{fig:o2message} The \O2 message structure. Logical data blocks consisting of payload and metadata parts are contained in a multi-part FairMQ message (bottom). The buffers associated to the message parts do not have to be continuous in memory (top).}
+  \centering
+  \includegraphics[width=0.89\textwidth]{multipartO2message.pdf}
+  \caption{The \O2 message structure. Logical data blocks consisting of payload and metadata parts are contained in a multi-part FairMQ message (bottom). The buffers associated to the message parts do not have to be continuous in memory (top).}
+  \label{fig:o2message} 
 \end{figure}
 
 Storing the metadata in separate buffers offers several advantages:
@@ -75,18 +78,18 @@ Storing the metadata in separate buffers offers several advantages:
 The O2 metadata consists of a contiguous buffer containing a sequence of headers (header stack).
 The byte representation of a header consists of a user defined body following a BaseHeader struct containing fields needed to:
 \begin{itemize}
-  \item Verify that the following data belongs to an \O2 header.
+  \item Verify that the following data (header body) belongs to an \O2 header.
   \item Define the size of the entire header.
   \item Flag whether another header follows this one in the stack.
   \item Verify the version of the header.
   \item Signal the type of the header.
-  \item Signal the packing/serialization scheme of the metadata carried by the header.
+  \item Signal the packing/serialization scheme of the metadata body carried by the header.
 \end{itemize}
 
 The header stack should contain at least the standard DataHeader struct describing the basic payload properties. The DataHeader representation starts with the BaseHeader followed by bytes representing:
 \begin{itemize}
   \item The functional data description uniquely determining the data type contained in the payload.
-  \item The payload serialization method (e.g. ROOT, FlatBuffer, none) complementing the data description field.
+  \item The payload serialization method (e.g. ROOT, FlatBuffers, none) complementing the data description field.
   \item The origin of the data to identify the producer (e.g. detector system or a software subsystem).
   \item A data type dependent 64 bit specification. This can be used by the detectors to store e.g. the fine grained equipment ID like the link number for raw data or cluster finder instance for clusters\footnote{Based on HLT experience: most data types use some kind of fine grained ID. This field has been added here to avoid the overhead of a full header for what in most cases would be just one (64 bit) field.}.
   \item The payload buffer size\footnote{This is not strictly necessary online as the transport framework keeps track of the buffer sizes. Keeping this information is the header is useful for persistent storage and debugging purposes.}.
@@ -122,9 +125,11 @@ struct DataHeader : public BaseHeader
   uint64_t payloadSize;
 };
 
-
-
 \end{lstlisting}
+
+
+
+Other headers can be defined similarly to DataHeader and included in the header stack based on the requirements. Examples include trigger information for triggered detector data, object name for ROOT objects used in quality control etc.
 
 \section{Data formats}
 
