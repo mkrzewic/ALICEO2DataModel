@@ -40,12 +40,14 @@ It does not, however, exclude the use of multithreading and other forms of concu
 The data exchange between processes running within the \O2 system (called \O2 devices) is taken care of by the ALICE-FAIR (Alfa ) framework \cite{alfa}. Since this is the only communication mechanism foreseen for data exchange, it effectively serves the role of an API between the devices.
 The Alfa framework provides data transport and synchronisation primitives via the FairMQ message queue library. FairMQ messages consist of raw memory buffers which are asynchronously queued and atomically delivered.
 
-The data processed by the \O2 system consists of a set of data buffers originating from the detector hardware and the processing devices. The data fragments are logically grouped into (sub-) time frames. A (sub-) time frame contains the data associated to a period of data taking (typically several tens of ms, as dictated by the heartbeat trigger \cite{O2readout}) and/or the results of the processing of these data. In addition any data that might be necessary to describe and qualify the data set can be added to the logical group.
+The online data processed by the \O2 system consists of a set of data buffers originating from the detector hardware (raw data) and the processing devices (derived data). The data fragments are logically grouped into (sub-) time frames. A (sub-) time frame contains raw data associated to a period of data taking (typically several tens of ms, as dictated by the heartbeat trigger \cite{O2readout}) and/or the results of the processing of these data. In addition any data that might be necessary to describe and qualify the data set can be added to the logical group.
 
-In order to assure consistent navigation within a time frame, each data fragment is described by a small metadata block containing the information about the content type of the payload, origin and coding (serialization) method.
+In the unified online-offline software model also derived data is handled within the same software framework. \O2 devices dedicated to quality control (QC) and physics analysis tasks should use the same set of interfaces as pure online components. The requirements for the data used in these tasks tend to be different from the online components: high level abstractions and ease of use (of e.g. ROOT\cite{root} objects) is sometimes preferred to high performance low-level data structures. Transparent support for high level data structures is part of the proposed data model.
+
+A single time frame data volume is expected to be of the order of tens of gigabytes. The data model facilitates communication approaches that minimize resource use, i.e. avoid unnecessary copies of data.
+
+In order to assure consistent navigation within a time frame, each data fragment is described by a small metadata block containing the information about the content type of the payload, it's origin and serialization strategy.
 In addition, the metadata block can be extended by the processing devices with additional information without the need to modify the payload.
-
-Since time frame data volume is expected to be of the order of tens of gigabytes, the data model must facilitate communication approaches that will minimize resource use, i.e. avoid unnecessary copies of data.
 
 \section{Vectored IO}
 
@@ -86,7 +88,7 @@ The byte representation of a header consists of a user defined body following a 
   \item Signal the packing/serialization scheme of the metadata body carried by the header.
 \end{itemize}
 
-The header stack should contain at least the standard DataHeader struct describing the basic payload properties. The DataHeader representation starts with the BaseHeader followed by bytes representing:
+The header stack should contain at least the standard DataHeader struct describing the basic payload properties common to all payloads. The DataHeader representation starts with the BaseHeader followed by bytes representing:
 \begin{itemize}
   \item The functional data description uniquely determining the data type contained in the payload.
   \item The payload serialization method (e.g. ROOT, FlatBuffers, none) complementing the data description field.
@@ -95,7 +97,10 @@ The header stack should contain at least the standard DataHeader struct describi
   \item The payload buffer size\footnote{This is not strictly necessary online as the transport framework keeps track of the buffer sizes. Keeping this information is the header is useful for persistent storage and debugging purposes.}.
 \end{itemize}
 
-The memory layout of the BaseHeader and DataHeader structs and their interdependence is illustrated by the following code:
+Other headers can be defined similarly to DataHeader and included in the header stack. Examples include trigger information for triggered detector data, object name for ROOT objects used in quality control etc.
+
+\subsection{Header memory layout}
+The memory layout of the DataHeader struct is illustrated by the following definition:
 
 \lstset{language=C++
 %,
@@ -107,7 +112,7 @@ The memory layout of the BaseHeader and DataHeader structs and their interdepend
 \begin{lstlisting}
 struct BaseHeader
 {
-  uint32_t  magicStringInt;
+  uint32_t  magicString;
   uint32_t  headerSize;
   uint32_t  flags;
   uint32_t  headerVersion;
@@ -127,13 +132,28 @@ struct DataHeader : public BaseHeader
 
 \end{lstlisting}
 
+\subsection{Header interface}
 
+Data members representing (in principle) arbitrary integers (headerSize, payloadSize, subSpecification) or bitfields (flags) are directly accessible and settable as integers.
 
-Other headers can be defined similarly to DataHeader and included in the header stack based on the requirements. Examples include trigger information for triggered detector data, object name for ROOT objects used in quality control etc.
+Access to other members is protected by strongly typed interfaces. Initialization can only be performed using predefined constants, consistency is then assured by the type system at compile time.
 
 \section{Data formats}
 
+The \O2 data model does not impose any limitations on the data types exchanged between devices. The only constraint from the data transport layer is that the trasported payload must be contiguous in memory. For higher level data types it usually means that they need to be serialized which penalizes performance (to a varying degree).
+
+\section{Data in memory}
+The recommendation is to use flat POD data types where performance and/or memory usage is critical. Flat data means natually contiguous data that does not require a serialization step and does not contain on any process specific run time dependent information like virtual function table pointers or pointer/reference members.
+
+Outside of the critical path where only relatively a low volume of data needs to be transported between devices, serialization schemes possibly impose acceptable overhead. The data model supports serialization schemes and facilitates transparent handling of serialized data at the user code level.
+
+\subsection{Persistent storage}
+The in-memory data representation of header and payload buffers contains enough information to be stored on-disk directly as a sequence of buffers. The data represented by POD data are, however, not suitable for long term storage and need to be transformed to a portable and extensible format.
+
+In the modular \O2 design only a dedicated device would handle persistent storage making the translation steps from and to peristent storage format transparent to other devices which only need to deal with the in-memory format.
+
 \section{Interfaces}
+The base functionality of a device running in the \O2 system is contained in the FairMQDevice class. This is a generic class providing all the necessary logic to support the \O2 data model, like control abstractions, a state machine and multi-part messaging. Support for the multi-part messaging is, however, unaware of the \O2 specific message layout. In order to 
 
 \printbibliography
 

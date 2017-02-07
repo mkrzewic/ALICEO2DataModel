@@ -154,6 +154,13 @@
       \verb http://svnweb.cern.ch/world/wsvn/alicetdrrun3/Notes/Run34SystemNote/detector-read-alice/ALICErun34_readout.pdf
       \endverb
     \endentry
+    \entry{root}{online}{}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \verb{url}
+      \verb https://root.cern.ch/
+      \endverb
+    \endentry
   \endsortlist
 \endrefsection
 \endinput

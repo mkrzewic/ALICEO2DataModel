@@ -2077,6 +2077,7 @@
     <bcf:citekey order="1">o2</bcf:citekey>
     <bcf:citekey order="2">alfa</bcf:citekey>
     <bcf:citekey order="3">O2readout</bcf:citekey>
+    <bcf:citekey order="4">root</bcf:citekey>
   </bcf:section>
   <bcf:sortlist section="0" name="none/global/" type="entry" sortscheme="none" sortnamekeyscheme="global" labelprefix="">
   <bcf:sorting>

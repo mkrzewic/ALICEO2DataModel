@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.13)  6 FEB 2017 20:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.13)  7 FEB 2017 13:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -447,23 +447,32 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <14.4> on input line 57.
+(Font)              <14.4> on input line 59.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 57.
+(Font)              <7> on input line 59.
  <multipartO2message.pdf, id=13, 845.1575pt x 597.23125pt>
 File: multipartO2message.pdf Graphic file (type pdf)
 
 <use multipartO2message.pdf>
-Package pdftex.def Info: multipartO2message.pdf used on input line 63.
+Package pdftex.def Info: multipartO2message.pdf used on input line 65.
 (pdftex.def)             Requested size: 307.04979pt x 216.9806pt.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 71.
 
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 73.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 71.
- [2 <./multipartO2message.pdf>]
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 73.
+
+Overfull \hbox (0.57939pt too wide) in paragraph at lines 83--84
+[]\OT1/cmr/m/n/9 Verify that the fol-low-ing data (header body) be-longs to an 
+O$[]$ header. 
+ []
+
+[2] [3 <./multipartO2message.pdf>]
 (/usr/local/texlive/2016/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
@@ -472,32 +481,32 @@ File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
 (/usr/local/texlive/2016/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
-) [3]
-Overfull \hbox (12.83235pt too wide) in paragraph at lines 137--137
+) [4]
+Overfull \hbox (12.83235pt too wide) in paragraph at lines 159--159
 []\OT1/cmr/m/it/10 The Al-ice O2 soft-ware\OT1/cmr/m/n/10 . \OT1/cmr/m/sc/10 ur
 l\OT1/cmr/m/n/10 : $\OT1/cmtt/m/n/10 https : / / github . com / AliceO2Group$\O
 T1/cmr/m/n/10 . 
  []
 
 
-Overfull \hbox (4.80322pt too wide) in paragraph at lines 137--137
+Overfull \hbox (4.80322pt too wide) in paragraph at lines 159--159
 \OT1/cmtt/m/n/10 Notes / Run34SystemNote / detector -[] read -[] alice / ALICEr
 un34 _
  []
 
-[4] (./O2DataModel.aux)
+[5] (./O2DataModel.aux)
 Package logreq Info: Writing requests to 'O2DataModel.run.xml'.
 \openout1 = `O2DataModel.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 10037 strings out of 493014
- 170837 string characters out of 6133351
- 576765 words of memory out of 5000000
- 13482 multiletter control sequences out of 15000+600000
- 10545 words of font info for 37 fonts, out of 8000000 for 9000
+ 10040 strings out of 493014
+ 170906 string characters out of 6133351
+ 578789 words of memory out of 5000000
+ 13485 multiletter control sequences out of 15000+600000
+ 10852 words of font info for 38 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,8n,58p,1374b,1529s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,8n,58p,1374b,1004s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><
 /usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><
@@ -511,10 +520,10 @@ ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive
 /2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2
 016/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/20
 16/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on O2DataModel.pdf (4 pages, 185496 bytes).
+Output written on O2DataModel.pdf (5 pages, 189352 bytes).
 PDF statistics:
- 77 PDF objects out of 1000 (max. 8388607)
- 54 compressed objects within 1 object stream
+ 80 PDF objects out of 1000 (max. 8388607)
+ 56 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
