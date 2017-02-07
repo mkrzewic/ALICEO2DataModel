@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.13)  7 FEB 2017 16:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.13)  7 FEB 2017 16:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -360,14 +360,32 @@ Package biblatex Info: ... file 'biblatex.cfg' found.
 (/usr/local/texlive/2016/texmf-dist/tex/latex/biblatex/biblatex.cfg
 File: biblatex.cfg 
 ))
+(/usr/local/texlive/2016/texmf-dist/tex/latex/lineno/lineno.sty
+Package: lineno 2005/11/02 line numbers on paragraphs v4.41
+\linenopenalty=\count284
+\output=\toks18
+\linenoprevgraf=\count285
+\linenumbersep=\dimen116
+\linenumberwidth=\dimen117
+\c@linenumber=\count286
+\c@pagewiselinenumber=\count287
+\c@LN@truepage=\count288
+\c@internallinenumber=\count289
+\c@internallinenumbers=\count290
+\quotelinenumbersep=\dimen118
+\bframerule=\dimen119
+\bframesep=\dimen120
+\bframebox=\box30
+LaTeX Info: Redefining \\ on input line 3056.
+)
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/biblatex/lbx/english.lbx
 File: english.lbx 2016/05/14 v3.4 biblatex localization (PK/JW/AB)
 )
-\@quotelevel=\count284
-\@quotereset=\count285
+\@quotelevel=\count291
+\@quotereset=\count292
 
 (./O2DataModel.aux)
 \openout1 = `O2DataModel.aux'.
@@ -387,17 +405,17 @@ LaTeX Font Info:    ... okay on input line 19.
 
 (/usr/local/texlive/2016/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count286
-\scratchdimen=\dimen116
-\scratchbox=\box30
-\nofMPsegments=\count287
-\nofMParguments=\count288
-\everyMPshowfont=\toks18
-\MPscratchCnt=\count289
-\MPscratchDim=\dimen117
-\MPnumerator=\count290
-\makeMPintoPDFobject=\count291
-\everyMPtoPDFconversion=\toks19
+\scratchcounter=\count293
+\scratchdimen=\dimen121
+\scratchbox=\box31
+\nofMPsegments=\count294
+\nofMParguments=\count295
+\everyMPshowfont=\toks19
+\MPscratchCnt=\count296
+\MPscratchDim=\dimen122
+\MPnumerator=\count297
+\makeMPintoPDFobject=\count298
+\everyMPtoPDFconversion=\toks20
 ) (/usr/local/texlive/2016/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -416,7 +434,7 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\c@lstlisting=\count292
+\c@lstlisting=\count299
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 Package biblatex Info: No input encoding detected.
@@ -450,7 +468,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <14.4> on input line 59.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 59.
- <multipartO2message.pdf, id=13, 845.1575pt x 597.23125pt>
+ <multipartO2message.pdf, id=14, 845.1575pt x 597.23125pt>
 File: multipartO2message.pdf Graphic file (type pdf)
 
 <use multipartO2message.pdf>
@@ -524,13 +542,13 @@ Package logreq Info: Writing requests to 'O2DataModel.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 10120 strings out of 493014
- 172022 string characters out of 6133351
- 579789 words of memory out of 5000000
- 13561 multiletter control sequences out of 15000+600000
- 11160 words of font info for 39 fonts, out of 8000000 for 9000
+ 10326 strings out of 493014
+ 175122 string characters out of 6133351
+ 584108 words of memory out of 5000000
+ 13762 multiletter control sequences out of 15000+600000
+ 11460 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,8n,58p,1374b,1111s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,8n,58p,1374b,1453s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
@@ -543,13 +561,14 @@ l/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/t
 exlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texl
 ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive
 /2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/20
-16/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2016
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2016/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on O2DataModel.pdf (6 pages, 212948 bytes).
+16/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/2016
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2016/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2016/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on O2DataModel.pdf (6 pages, 222522 bytes).
 PDF statistics:
- 91 PDF objects out of 1000 (max. 8388607)
- 64 compressed objects within 1 object stream
+ 95 PDF objects out of 1000 (max. 8388607)
+ 67 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
