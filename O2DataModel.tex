@@ -138,6 +138,16 @@ Data members representing (in principle) arbitrary integers (headerSize, payload
 
 Access to other members is protected by strongly typed interfaces. Initialization can only be performed using predefined constants, consistency is then assured by the type system at compile time.
 
+Access to header information contained in a metadata buffer is also implemented in a type safe way.
+
+\subsubsection{Example}
+The user may check if a given buffer contains the desired header information in a type safe way. If the desired header is of type DataHeader, a call to:
+\begin{lstlisting}
+DataHeader* header = Header::get<DataHeader>(buffer);
+\end{lstlisting}
+
+will yield a valid pointer if a header of type DataHeader is part of the header stack inside the buffer pointed to by the buffer pointer.
+
 \section{Data formats}
 
 The \O2 data model does not impose any limitations on the data types exchanged between devices. The only constraint from the data transport layer is that the trasported payload must be contiguous in memory. For higher level data types it usually means that they need to be serialized which penalizes performance (to a varying degree).
@@ -153,7 +163,38 @@ The in-memory data representation of header and payload buffers contains enough 
 In the modular \O2 design only a dedicated device would handle persistent storage making the translation steps from and to peristent storage format transparent to other devices which only need to deal with the in-memory format.
 
 \section{Interfaces}
-The base functionality of a device running in the \O2 system is contained in the FairMQDevice class. This is a generic class providing all the necessary logic to support the \O2 data model, like control abstractions, a state machine and multi-part messaging. Support for the multi-part messaging is, however, unaware of the \O2 specific message layout. In order to 
+The base functionality of a device running in the \O2 system is contained in the FairMQDevice class. This is a generic class providing all the necessary logic to support the \O2 system and data model, like control abstractions, a state machine and multi-part messaging. FairMQ support for the multi-part messaging is, however, unaware of the \O2 specific message layout. In order to enforce a consistent handling of the metadata the necessary interface is implemented on top of FairMQDevice as O2device.
+
+Each device in the \O2 system should inherit from the O2device class in order to be able to use the data model. Interfaces are provided that insure consistency in the handling of the data and associated metadata.
+
+\subsection{Examples}
+To construct a message, the AddMessage(...) family of methods should be used to insure correct association of metadata to payloads, e.g. in the simplest case:
+\begin{lstlisting}
+bool AddMessage( FairMQParts& message,
+                 AliceO2::Header::Block&& headerStack,
+                 FairMQMessagePtr payloadPart );
+\end{lstlisting}
+where in a single call the header stack to payload association is made and data is appended to the message.
+
+After the message is constructed a call to the standard FairMQ send method suffices:
+\begin{lstlisting}
+int64_t Send( const FairMQParts& parts,
+              const std::string& channel );
+\end{lstlisting}
+This queues the entire message for atomic delivery via a specified data channel.
+
+For decoding the message on the receiving end functionality is provided to access the metadata and it's associated payload in a consistent way. The user implements a function that takes the metadata and the payload buffers as input, and uses that function via e.g. a call to:
+\begin{lstlisting}
+template <typename T>
+bool ForEach(
+       O2message& parts,
+       bool (T::*memberFunction)(
+         const byte* headerBuffer, size_t headerBufferSize,
+         const byte* dataBuffer, size_t dataBufferSize
+       )
+     );
+\end{lstlisting}
+Inside the user provided function the metadata and the payload are decoded and processed.
 
 \printbibliography
 
