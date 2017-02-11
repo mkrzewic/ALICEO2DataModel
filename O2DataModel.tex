@@ -42,23 +42,25 @@ The Alfa framework provides data transport and synchronisation primitives via th
 
 The online data processed by the \O2 system consists of a set of data buffers originating from the detector hardware (raw data) and the processing devices (derived data). The data fragments are logically grouped into (sub-) time frames. A (sub-) time frame contains raw data associated to a period of data taking (typically several tens of ms, as dictated by the heartbeat trigger \cite{O2readout}) and/or the results of the processing of these data. In addition any data that might be necessary to describe and qualify the data set can be added to the logical group.
 
-In the unified online-offline software model also derived data is handled within the same software framework. \O2 devices dedicated to quality control (QC) and physics analysis tasks should use the same set of interfaces as pure online components. The requirements for the data used in these tasks tend to be different from the online components: high level abstractions and ease of use (of e.g. ROOT\cite{root} objects) is sometimes preferred to high performance low-level data structures. Transparent support for high level data structures is part of the proposed data model.
+In the unified online-offline software model also derived data is handled within the same software framework. \O2 devices dedicated to quality control (QC) and physics analysis tasks should use the same set of interfaces as components in the synchronous data reconstruction and calibration chain. The requirements for the data used in these tasks tend to be different from the online components: high level abstractions and ease of use (of e.g. ROOT\cite{root} objects) is sometimes preferred to high performance low-level data structures. Transparent support for high level data structures is part of the proposed data model.
 
-A single time frame data volume is expected to be of the order of tens of gigabytes. The data model facilitates communication approaches that minimize resource use, i.e. avoid unnecessary copies of data.
+A single time frame data volume is expected to be of the order of tens of gigabytes. The data model facilitates communication approaches that minimize resource use, i.e. avoid unnecessary copies of data and serialization/de-serialization overhead.
 
 In order to assure consistent navigation within a time frame, each data fragment is described by a small metadata block containing the information about the content type of the payload, it's origin and serialization strategy.
 In addition, the metadata block can be extended by the processing devices with additional information without the need to modify the payload.
 
 \section{Message queue based communication}
+The move to a multi-process, message queue based system is a large departure from the current ALICE offline computing model. It is, however, conceptually close to the modular processing model of the ALICE HLT. The decentralized messaging queue library concept of FairMQ simplifies it by integrating the data transport layer into the code base and eliminating the separation between a transport framework and processing processes.
+In contrast to the managed and synchronized data flow in the HLT framework, message queue based systems are fully asynchronous. Messages are asynchronously queued on both the sending and receiving ends and multiplexed between the different connections without any queue ordering guarantees. When dealing with multiple logically associated data buffers lower level abstractions are needed to maintain their association across transport boundaries without incurring excessive overhead.
 
-Vectored IO (also referred to as scatter/gather IO) is an important feature when dealing with multiple data buffers as it allows, in principle, to avoid the cost associated with serializing data into a single IO buffer.
-Vectored IO is provided in FairMQ in the form of multi-part messages. A multi-part message consists of multiple independent buffers and is delivered atomically as a whole while preserving the ordering of the buffers.
+Vectored IO (also referred to as scatter/gather IO in the POSIX specification in \cite{posix}) is an important feature when dealing with multiple data buffers as it allows, in principle, to avoid the cost associated with serializing data into a single IO buffer before scheduling it's transport.
+A form of vectored IO is provided in FairMQ as multi-part messages. A multi-part message consists of multiple independent buffers and is delivered atomically as a single (multi-part) message while preserving the ordering of the buffers.
 
-The multi-part approach, in addition to minimizing the resource strain associated with IO buffer construction, also by construction reduces the need for (re-)synchronisation and event building; data fragments once associated to a single time frame remain that way throughout the entire chain regardless of the networking topology. Another benefit is that additional data parts can be attached or removed by other processing devices without copy overhead at any point of the processing chain.
+The multi-part approach, in addition to minimizing the resource strain associated with IO buffer construction, also by construction reduces the need for (re-)synchronisation and event building; data fragments once associated to a single logical unit (e.g. a time frame) remain that way throughout the entire chain regardless of the data transport topology. Another benefit is that additional data parts can be attached or removed by other processing devices without copy overhead at any point of the processing chain.
 
-\section{\O2 Message structure}
+\section{\O2 message structure}
 
-The \O2 message consists of a sequence of metadata-payload pairs contained within a multi-part message. Each payload is described by metadata contained in a separate message part. Since FairMQ preserves the ordering of the parts, the natural choice is to precede each data part with the associated metadata part in the message, as illustrated in figure \ref{fig:o2message}. 
+The \O2 message consists of a sequence of metadata-payload pairs of message parts contained within a multi-part message. Each payload is described by metadata contained in a separate message part. Since FairMQ preserves the ordering of the parts, the natural choice is to precede each data part with the associated metadata part in the message, as illustrated in figure \ref{fig:o2message}. 
 
 \begin{figure}[h]
   \centering

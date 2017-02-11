@@ -161,6 +161,14 @@
       \verb https://root.cern.ch/
       \endverb
     \endentry
+    \entry{posix}{webpage}{}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \verb{url}
+      \verb http://www.unix.org/version3/ieee_std.html
+      \endverb
+      \keyw{POSIX IEEE Std 1003.1}
+    \endentry
   \endsortlist
 \endrefsection
 \endinput
