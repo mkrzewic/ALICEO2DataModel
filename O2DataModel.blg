@@ -1,15 +1,15 @@
 [0] Config.pm:343> INFO - This is Biber 2.5
 [0] Config.pm:346> INFO - Logfile is 'O2DataModel.blg'
-[49] biber-darwin:290> INFO - === Sat Feb 11, 2017, 19:53:47
-[70] Biber.pm:351> INFO - Reading 'O2DataModel.bcf'
-[144] Biber.pm:776> INFO - Found 6 citekeys in bib section 0
-[157] Biber.pm:3493> INFO - Processing section 0
-[173] Biber.pm:3657> INFO - Looking for bibtex format file 'o2bibliography.bib' for section 0
-[175] bibtex.pm:1187> INFO - Decoding LaTeX character macros into UTF-8
-[175] bibtex.pm:1048> INFO - Found BibTeX data source 'o2bibliography.bib'
-[203] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[203] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[203] Biber.pm:3306> INFO - Sorting list 'none/global/' of type 'entry' with scheme 'none' and locale 'en-US'
-[204] Biber.pm:3310> INFO - No sort tailoring available for locale 'en-US'
-[207] bbl.pm:526> INFO - Writing 'O2DataModel.bbl' with encoding 'ascii'
-[209] bbl.pm:619> INFO - Output to O2DataModel.bbl
+[40] biber-darwin:290> INFO - === Wed Feb 15, 2017, 13:21:48
+[58] Biber.pm:351> INFO - Reading 'O2DataModel.bcf'
+[138] Biber.pm:776> INFO - Found 6 citekeys in bib section 0
+[148] Biber.pm:3493> INFO - Processing section 0
+[159] Biber.pm:3657> INFO - Looking for bibtex format file 'o2bibliography.bib' for section 0
+[162] bibtex.pm:1187> INFO - Decoding LaTeX character macros into UTF-8
+[162] bibtex.pm:1048> INFO - Found BibTeX data source 'o2bibliography.bib'
+[182] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[182] UCollate.pm:66> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[182] Biber.pm:3306> INFO - Sorting list 'none/global/' of type 'entry' with scheme 'none' and locale 'en-US'
+[182] Biber.pm:3310> INFO - No sort tailoring available for locale 'en-US'
+[186] bbl.pm:526> INFO - Writing 'O2DataModel.bbl' with encoding 'ascii'
+[188] bbl.pm:619> INFO - Output to O2DataModel.bbl

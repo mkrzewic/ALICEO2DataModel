@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.13)  11 FEB 2017 19:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.13)  15 FEB 2017 13:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -468,23 +468,20 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <14.4> on input line 61.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 61.
- <multipartO2message.pdf, id=14, 845.1575pt x 597.23125pt>
+ [2] <multipartO2message.pdf, id=17, 845.1575pt x 597.23125pt>
 File: multipartO2message.pdf Graphic file (type pdf)
 
 <use multipartO2message.pdf>
 Package pdftex.def Info: multipartO2message.pdf used on input line 67.
 (pdftex.def)             Requested size: 307.04979pt x 216.9806pt.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 75.
+
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 75.
- [2]
+
 Overfull \hbox (0.57939pt too wide) in paragraph at lines 85--86
 []\OT1/cmr/m/n/9 Verify that the fol-low-ing data (header body) be-longs to an 
 O$[]$ header. 
@@ -546,10 +543,10 @@ Package logreq Info: Writing requests to 'O2DataModel.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 10330 strings out of 493014
- 175234 string characters out of 6133351
- 584120 words of memory out of 5000000
- 13766 multiletter control sequences out of 15000+600000
+ 10331 strings out of 493014
+ 175246 string characters out of 6133351
+ 585142 words of memory out of 5000000
+ 13767 multiletter control sequences out of 15000+600000
  11460 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  36i,8n,58p,1374b,1111s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -569,7 +566,7 @@ ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2016/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2016/te
 xmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on O2DataModel.pdf (7 pages, 226300 bytes).
+Output written on O2DataModel.pdf (7 pages, 226905 bytes).
 PDF statistics:
  100 PDF objects out of 1000 (max. 8388607)
  71 compressed objects within 1 object stream
