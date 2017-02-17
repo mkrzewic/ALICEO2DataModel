@@ -4,6 +4,7 @@
 \usepackage{listings}
 \usepackage{float}
 \usepackage[width=0.89\textwidth]{caption}
+\usepackage{hyperref}
 
 \usepackage[natbib=true,
     style=numeric,
@@ -11,8 +12,15 @@
     backend=biber]{biblatex}
 \addbibresource{o2bibliography.bib}
 
+%temporary measures
 \usepackage{lineno}
 \linenumbers
+\usepackage{xcolor}
+
+%show comments in red
+\newcommand\comment[1]{\textcolor{red}{\emph{#1}}}
+%uncomment following to disable comments
+%\renewcommand\comment[1]{}
 
 \def\O2{O$^2$}
 
@@ -37,24 +45,42 @@ The ALICE online-offline (\O2) computing system \cite{o2tdr,o2} is a computing f
 The design aims at high data throughput and parallelism using a multiprocess model.
 It does not, however, exclude the use of multithreading and other forms of concurrent processing inside of individual processes.
 
-The data exchange between processes running within the \O2 system (called \O2 devices) is taken care of by the ALICE-FAIR (Alfa ) framework \cite{alfa}. Since this is the only communication mechanism foreseen for data exchange, it effectively serves the role of an API between the devices.
+The data exchange between processes running within the \O2 system (called \O2 devices) is taken care of by the ALICE-FAIR (Alfa ) framework \cite{alfa}. Since this is the main communication mechanism foreseen for data exchange, it effectively serves the role of an API between the devices.
 The Alfa framework provides data transport and synchronisation primitives via the FairMQ message queue library. FairMQ messages consist of raw memory buffers which are asynchronously queued and atomically delivered.
 
-The online data processed by the \O2 system consists of data buffers originating from the detector hardware (raw data) and the processing devices (derived data). The data fragments belonging to are logically grouped into a data set, e.g. a (sub-) time frames. A (sub-) time frame contains raw data associated to a period of data taking (typically several tens of ms, as dictated by the heartbeat trigger \cite{O2readout}) and/or the results of the processing of these data. In addition, any data that might be necessary to describe and qualify the data set can be added to the logical group.
+The online data processed by the \O2 system consists of data buffers originating from the detector hardware (raw data) and the processing devices (containing derived data). The data fragments belonging to a logical unit are grouped into a data set, e.g. a (sub-) time frames. A (sub-) time frame contains raw data associated to a period of data taking (typically several tens of ms, as dictated by the heartbeat trigger \cite{O2readout}) and/or the results of the processing of these data. In addition, any data that might be necessary to describe and qualify the data set can be added to the logical group.
 
 In the unified online-offline software model also derived data is handled within the same software framework. \O2 devices dedicated to quality control (QC) and physics analysis tasks should use the same set of interfaces as components in the synchronous data reconstruction and calibration chain. The requirements for the data used in these tasks tend to be different from the online components: high level abstractions and ease of use (of e.g. ROOT\cite{root} objects) is sometimes preferred to high performance low-level data structures. Transparent support for high level data structures is part of the proposed data model.
 
-A single time frame data volume is expected to be of the order of tens of gigabytes. The data model facilitates communication approaches that minimize resource use, i.e. avoid unnecessary copies of data and serialization/de-serialization overhead. This zero-copy approach is needed in order to achieve optimal performance in view of the large data volumes that need to be transported and processed. The multi-processing paradigm combined with the zero-copy approach to data transport impose significant restrictions on the data model and interface design.
+\section{Zero-copy approach}
+
+A single time frame data volume is expected to be of the order of tens of gigabytes. The data model should facilitate data exchange approaches that minimize resource use, i.e. avoid unnecessary copies of data and serialization/de-serialization overhead.
+
+Traditionally, in monolithic designs where all processing is performed inside a single process, data exchange between logical processing units (i.e. subroutines and threads) is supported at the programming language semantics level using e.g. pass-by-value or pass-by-reference techniques.
+The ubiquitous virtual memory model supported by most current computing architectures allows subroutines to efficiently exchange data by absolute references (pointers) to resources available in the uniform process virtual memory space.
+This memory model also enables fully transparent and efficient compiler support of higher level abstractions like virtual inheritance and type safety in the C++ language.
+
+In the \O2 multi-processing model data needs to be exchanged between devices running as separate processes. In the case of devices separated by a network interface (running on different machines in a network) a data copy over the network is inevitable. The copy overhead can, however, be minimized using modern networking technologies like remote direct memory access (RDMA). For processes running on the same physical hardware it is possible to use shared memory which can be accessed directly by more than one process. This memory region is usually not covered by the standard resource allocation mechanisms provided by the language and needs to be addressed explicitly. A data copy to this memory can be avoided by constructing the data directly there. Data in shared memory, as it is mapped by the operating system at an arbitrary address within the process virtual memory cannot contain any references to absolute addresses, that excludes structures containing pointer data members and higher level language features (like virtual inheritance) from being used. 
+
+\comment{
+The zero-copy approach is needed in order to achieve optimal performance in view of the large data volumes that need to be transported and processed.
+The multi-processing paradigm combined with the zero-copy approach imposes significant restrictions on the data model and interface design. 
+etc.
+}
+
+\section{\O2 data flow}
+
+
 
 In order to ensure consistent navigation within a data set (e.g. a time frame), each data fragment is described by a small metadata block containing the information about the content type of the payload, it's origin and serialization strategy.
 In addition, the metadata block can be extended by the processing devices with additional information without the need to modify the payload.
 
 \section{Message queue based communication}
-The move to a multi-process, message queue based system is a large departure from the current monolithic ALICE offline data and computing model. It is, however, conceptually close to the modular processing model of the ALICE HLT. The decentralized messaging queue concept of FairMQ simplifies it by integrating the data transport layer into a library and eliminating the separation between transport and processing devices (or processes).
-In contrast to the managed and synchronized data flow in the HLT framework, message queue based systems are fully asynchronous. Messages are asynchronously queued on both the sending and receiving ends and multiplexed between the different connections without queue ordering guarantees. Devices recieving data are presented with an input queue where messages originating from different sources are interleaved non-deterministically. For dealing with multiple logically associated data buffers, additional lower level abstractions are needed to maintain their association across transport boundaries without incurring excessive overhead.
+The move to a multi-process, message queue based system is a large departure from the current monolithic ALICE offline data and computing model. It is, however, conceptually close to the modular processing model of the ALICE HLT. The decentralized messaging queue concept of FairMQ simplifies it by integrating the data transport layer into a library and eliminating the separation between dedicated transport and processing devices (or processes).
+In contrast to the managed and synchronized data flow in the HLT framework, message queue based systems are fully asynchronous. Messages are asynchronously queued on both the sending and receiving ends and multiplexed between the different connections without queue ordering guarantees. Devices receiving data are presented with an input queue where messages originating from different sources are interleaved in an non-deterministic order. For dealing with multiple logically associated data buffers, additional lower level abstractions are needed to maintain their association across transport boundaries without incurring excessive overhead.
 
-Vectored IO (also referred to as scatter/gather IO in the POSIX specification in \cite{posix}) is an important feature when dealing with multiple data buffers as it allows, in principle, to avoid the cost associated with serializing data into a single IO buffer before scheduling it's transport.
-A form of vectored IO is provided in FairMQ as multi-part messages. A multi-part message consists of multiple independent buffers and is delivered atomically as a single (multi-part) message while preserving the ordering of the buffers.
+Vectored IO (also referred to as scatter/gather IO in the POSIX specification in \cite{posix}) is an important feature when dealing with multiple data buffers as it allows, in principle, to avoid the cost associated with serializing a data set into a single IO buffer before scheduling it's transport.
+A form of vectored IO is provided in FairMQ as multi-part messages. A multi-part message consists of a structure (a vector) referencing multiple independent buffers. The multi-part message (and the referenced buffers) is transported atomically while preserving the ordering of the references.
 
 The multi-part approach, in addition to minimizing the resource strain associated with IO buffer construction, also by construction reduces the need for (re-)synchronisation and event building; data fragments once associated to a single logical unit (e.g. a time frame) remain that way throughout the entire chain regardless of the data transport topology. Another benefit is that additional data parts can be attached or removed by other processing devices without copy overhead at any point of the processing chain.
 
@@ -65,7 +91,7 @@ The \O2 message consists of a sequence of metadata-payload pairs of message part
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.89\textwidth]{multipartO2message.pdf}
-  \caption{The \O2 message structure. Logical data blocks consisting of payload and metadata parts are contained in a multi-part FairMQ message (bottom). The buffers associated to the message parts do not have to be contiguous in memory (top).}
+  \caption{The \O2 message structure containing a data set. Logical data blocks consisting of payload and metadata parts are contained in a multi-part FairMQ message (bottom). The buffers associated to the message parts do not have to be contiguous in memory (top).}
   \label{fig:o2message} 
 \end{figure}
 
@@ -134,22 +160,6 @@ struct DataHeader : public BaseHeader
 
 \end{lstlisting}
 
-\subsection{Header interface}
-
-Data members representing (in principle) arbitrary integers (headerSize, payloadSize, subSpecification) or bitfields (flags) are directly accessible and settable as integers.
-
-Access to other members is protected by strongly typed interfaces. Initialization can only be performed using predefined constants, consistency is then assured by the type system at compile time.
-
-Access to header information contained in a metadata buffer is also implemented in a type safe way.
-
-\subsubsection{Example}
-The user may check if a given buffer contains the desired header information in a type safe way. If the desired header is of type DataHeader, a call to:
-\begin{lstlisting}
-DataHeader* header = Header::get<DataHeader>(buffer);
-\end{lstlisting}
-
-will yield a valid pointer if a header of type DataHeader is part of the header stack inside the buffer pointed to by the buffer pointer.
-
 \section{Data formats}
 
 The \O2 data model does not impose any limitations on the data types exchanged between devices. The only constraint from the data transport layer is that the trasported payload must be contiguous in memory. For higher level data types it usually means that they need to be serialized which penalizes performance (to a varying degree). A trade off has to be made between flexibility and performance based on the use case for a particular data type.
@@ -177,7 +187,24 @@ The Quality control (QC) devices will produce ROOT based data.
 The contents of the AOD data used for end user physics data analysis is being prepared by the physics community. Work is being done on developing the in-memory layout that will support efficient processing, pruning and distribution in the message based \O2 environment. The struct-of-arrays approach that is currently investigated also allows for transparent extensions of the data content. The persistent storage of AOD still needs to be investigated.
 
 \section{Interfaces}
-The base functionality of a device running in the \O2 system is contained in the FairMQDevice class. This is a generic class providing all the necessary logic to support the \O2 system and data model, like control abstractions, a state machine and multi-part messaging. FairMQ support for the multi-part messaging is, however, unaware of the \O2 specific message layout. In order to enforce a consistent handling of the metadata the necessary interface is implemented on top of FairMQDevice as O2device.
+
+\subsection{Metadata access interface}
+Data members representing (in principle) arbitrary integers (headerSize, payloadSize, subSpecification) or bitfields (flags) are directly accessible and settable as integers.
+
+Access to other members is protected by strongly typed interfaces. Initialization can only be performed using predefined constants, consistency is then assured by the type system at compile time.
+
+Access to header information contained in a metadata buffer is also implemented in a type safe way.
+
+\subsubsection{Example}
+The user may check if a given buffer contains the desired header information in a type safe way. If the desired header is of type DataHeader, a call to:
+\begin{lstlisting}
+DataHeader* header = Header::get<DataHeader>(buffer);
+\end{lstlisting}
+
+will yield a valid pointer if a header of type DataHeader is part of the header stack inside the buffer pointed to by the buffer pointer.
+
+\subsection{Message navigation}
+The base functionality of a device running in the \O2 system is contained in the FairMQDevice class. This is a generic class providing all the necessary logic to support the \O2 system and data model, like control abstractions, a state machine and multi-part messaging. FairMQ support for the multi-part messaging is, however, unaware of the \O2 specific message layout and the header to payload association. In order to enforce a consistent handling of the metadata the necessary interface is implemented on top of FairMQDevice as O2device.
 
 Each device in the \O2 system should inherit from the O2device class in order to be able to use the data model. Interfaces are provided that insure consistency in the handling of the data and associated metadata.
 
