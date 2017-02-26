@@ -161,6 +161,13 @@
       \verb https://root.cern.ch/
       \endverb
     \endentry
+    \entry{flatbuffers}{webpage}{}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \verb{url}
+      \verb https://google.github.io/flatbuffers/
+      \endverb
+    \endentry
     \entry{posix}{webpage}{}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}

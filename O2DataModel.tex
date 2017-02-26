@@ -18,7 +18,7 @@
 \usepackage{xcolor}
 
 %show comments in red
-\newcommand\comment[1]{\textcolor{red}{\emph{#1}}}
+\newcommand\comment[1]{\color{red}{ #1 }\color{black}}
 %uncomment following to disable comments
 %\renewcommand\comment[1]{}
 
@@ -48,32 +48,71 @@ It does not, however, exclude the use of multithreading and other forms of concu
 The data exchange between processes running within the \O2 system (called \O2 devices) is taken care of by the ALICE-FAIR (Alfa ) framework \cite{alfa}. Since this is the main communication mechanism foreseen for data exchange, it effectively serves the role of an API between the devices.
 The Alfa framework provides data transport and synchronisation primitives via the FairMQ message queue library. FairMQ messages consist of raw memory buffers which are asynchronously queued and atomically delivered.
 
-The online data processed by the \O2 system consists of data buffers originating from the detector hardware (raw data) and the processing devices (containing derived data). The data fragments belonging to a logical unit are grouped into a data set, e.g. a (sub-) time frames. A (sub-) time frame contains raw data associated to a period of data taking (typically several tens of ms, as dictated by the heartbeat trigger \cite{O2readout}) and/or the results of the processing of these data. In addition, any data that might be necessary to describe and qualify the data set can be added to the logical group.
+The online data processed by the \O2 system consists of data buffers originating from the detector hardware (raw data) and the processing devices (containing derived data). The data fragments belonging to a logical unit are grouped into a data set, e.g. a (sub-) time frames. A (sub-) time frame contains raw data associated to a period of data taking (typically several tens of ms, as dictated by the heartbeat trigger \cite{O2readout}) and/or the results of the processing of these data. In addition, any data that might be necessary to describe the data set can be added to the logical group.
 
-In the unified online-offline software model also derived data is handled within the same software framework. \O2 devices dedicated to quality control (QC) and physics analysis tasks should use the same set of interfaces as components in the synchronous data reconstruction and calibration chain. The requirements for the data used in these tasks tend to be different from the online components: high level abstractions and ease of use (of e.g. ROOT\cite{root} objects) is sometimes preferred to high performance low-level data structures. Transparent support for high level data structures is part of the proposed data model.
+In the unified online-offline software model also derived data is handled within the same software framework. \O2 devices dedicated to quality control (QC) and physics analysis tasks should use the same set of interfaces as components in the synchronous data reconstruction and calibration chain. The requirements for the data used in these tasks tend to be different from the online components: high level abstractions and ease of use (of e.g. ROOT\cite{root} objects), despite the additional overhead, is sometimes preferred to high performance low-level data structures. Transparent support for high level data structures is part of the proposed data model.
 
 \section{Zero-copy approach}
 
 A single time frame data volume is expected to be of the order of tens of gigabytes. The data model should facilitate data exchange approaches that minimize resource use, i.e. avoid unnecessary copies of data and serialization/de-serialization overhead.
 
-Traditionally, in monolithic designs where all processing is performed inside a single process, data exchange between logical processing units (i.e. subroutines and threads) is supported at the programming language semantics level using e.g. pass-by-value or pass-by-reference techniques.
+Traditionally, in monolithic designs where all processing is performed inside a single process, data exchange between logical processing units (i.e. subroutines and threads) is supported at the programming language semantics level using parameter passing (by value or by reference).
 The ubiquitous virtual memory model supported by most current computing architectures allows subroutines to efficiently exchange data by absolute references (pointers) to resources available in the uniform process virtual memory space.
 This memory model also enables fully transparent and efficient compiler support of higher level abstractions like virtual inheritance and type safety in the C++ language.
 
-In the \O2 multi-processing model data needs to be exchanged between devices running as separate processes. In the case of devices separated by a network interface (running on different machines in a network) a data copy over the network is inevitable. The copy overhead can, however, be minimized using modern networking technologies like remote direct memory access (RDMA). For processes running on the same physical hardware it is possible to use shared memory which can be accessed directly by more than one process. This memory region is usually not covered by the standard resource allocation mechanisms provided by the language and needs to be addressed explicitly. A data copy to this memory can be avoided by constructing the data directly there. Data in shared memory, as it is mapped by the operating system at an arbitrary address within the process virtual memory cannot contain any references to absolute addresses, that excludes structures containing pointer data members and higher level language features (like virtual inheritance) from being used. 
+In the \O2 multi-processing model data needs to be exchanged between devices running as separate processes. In the case of devices separated by a network interface (running on different machines in a network) a data copy over the network is inevitable. The copy overhead can, however, be minimized using modern networking technologies like remote direct memory access (RDMA).
 
-\comment{
-The zero-copy approach is needed in order to achieve optimal performance in view of the large data volumes that need to be transported and processed.
-The multi-processing paradigm combined with the zero-copy approach imposes significant restrictions on the data model and interface design. 
-etc.
-}
+For processes running on the same machine it is possible to use shared memory segments which can be accessed directly by more than one process. This memory region is usually not covered by the standard resource allocation mechanisms provided by the language and needs to be addressed explicitly. A data copy to this memory can be avoided by constructing and manipulating the data directly there.
+
+Shared memory segments are mapped by the operating system at arbitrary base addresses within the process virtual memory. Data access in such a memory segment therefore cannot rely on absolute references as they are valid in one process only. That excludes structures containing pointer data members and higher level language features (like virtual inheritance) as these in general are implemented using absolute references. This limitation applies to data shared via messaging systems as well, as the base address of a message buffer will be different in each process.
+
+In cases where additional overhead is acceptable higher-level data structures can be serialized into a buffer or shared memory and then de-serialized by the receiving process. In the case of multiple devices processing the same data the same buffer is deserialized by each consumer separately.
+\comment{Various libraries exist that provide this functionality and try to optimize various aspects of the process, e.g. google flatbuffers\cite{flatbuffers} allow zero-copy access to data in the serialized buffer with only a minimal (indirection) overhead to ensure portability and schema evolution. Serialization, however always incurs data duplication as additional resources need to be allocated for the serialized buffer.}
+
+In view of the large volume of data that needs to be transported and processed by the multi-process based \O2 system this cost should be minimized. To achieve optimal performance the in-memory representation of data should allow a zero-copy approach. This is only possible when individual data units are contiguous in memory and do not refer to, or use, absolute addresses (pointers) or abstract language features (virtual inheritance). \comment{Should maybe conjure up a proper definition, e.g. POD type sans reference type members etc.}
 
 \section{\O2 data flow}
 
+\comment{
 
+In this section: overview of the main data flow and the requirements on the data layout and formats needed to achieve the flow:
 
-In order to ensure consistent navigation within a data set (e.g. a time frame), each data fragment is described by a small metadata block containing the information about the content type of the payload, it's origin and serialization strategy.
-In addition, the metadata block can be extended by the processing devices with additional information without the need to modify the payload.
+\subsection{First level processors}
+
+\begin{itemize}
+  \item CRU data in FLP memory.
+  \item Subtimeframe building.
+  \item FLP processing including.
+\end{itemize}
+
+\subsection{Event processing nodes}
+
+\begin{itemize}
+  \item Time frame building.
+  \item reconstruction and calibration.
+  \item compressed time frames.
+\end{itemize}
+
+\subsection{Quality control (QC)}
+
+\subsection{Asynchronous processing on the \O2 farm}
+
+\begin{itemize}
+  \item Event summary data.
+  \item AOD format.
+  \item Persistent data format(s).
+\end{itemize}
+
+\subsection{Analysis facilities}
+
+\begin{itemize}
+  \item Data analysis requirements.
+\end{itemize}
+
+\subsection{Requirement summary}
+
+}
+
 
 \section{Message queue based communication}
 The move to a multi-process, message queue based system is a large departure from the current monolithic ALICE offline data and computing model. It is, however, conceptually close to the modular processing model of the ALICE HLT. The decentralized messaging queue concept of FairMQ simplifies it by integrating the data transport layer into a library and eliminating the separation between dedicated transport and processing devices (or processes).
@@ -85,6 +124,9 @@ A form of vectored IO is provided in FairMQ as multi-part messages. A multi-part
 The multi-part approach, in addition to minimizing the resource strain associated with IO buffer construction, also by construction reduces the need for (re-)synchronisation and event building; data fragments once associated to a single logical unit (e.g. a time frame) remain that way throughout the entire chain regardless of the data transport topology. Another benefit is that additional data parts can be attached or removed by other processing devices without copy overhead at any point of the processing chain.
 
 \section{\O2 message structure}
+
+
+In order to ensure consistent navigation within a data set (e.g. a time frame), each data fragment is described by metadata containing the information about e.g. the content type of the payload, it's origin and serialization strategy.
 
 The \O2 message consists of a sequence of metadata-payload pairs of message parts contained within a multi-part message. Each payload is described by metadata contained in a separate message part. Since FairMQ preserves the ordering of the parts, the natural choice is to precede each data part with the associated metadata part in the message, as illustrated in figure \ref{fig:o2message}. 
 
