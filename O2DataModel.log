@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.13)  2 MAR 2017 18:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.1.13)  2 MAR 2017 18:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -565,81 +565,83 @@ Package biblatex Info: ... file 'O2DataModel.bbl' found.
 Package biblatex Info: Reference section=0 on input line 27.
 Package biblatex Info: Reference segment=0 on input line 27.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <17.28> on input line 38.
+(Font)              <17.28> on input line 39.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 38.
+(Font)              <12> on input line 39.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 38.
+(Font)              <8> on input line 39.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 38.
+(Font)              <6> on input line 39.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 39.
+(Font)              <9> on input line 40.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 39.
+(Font)              <5> on input line 40.
  [1
 
 {/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <14.4> on input line 127.
+(Font)              <14.4> on input line 128.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 127.
+(Font)              <7> on input line 128.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 127.
+(hyperref)                removing `math shift' on input line 128.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 127.
+(hyperref)                removing `superscript' on input line 128.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 127.
+(hyperref)                removing `math shift' on input line 128.
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 127.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 128.
 
 (/usr/local/texlive/2016/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 127.
- [3]
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 127.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 128.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 127.
+(hyperref)                removing `math shift' on input line 128.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 127.
+(hyperref)                removing `superscript' on input line 128.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 139.
+(hyperref)                removing `math shift' on input line 128.
+
+[3]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 140.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 139.
+(hyperref)                removing `superscript' on input line 140.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 139.
+(hyperref)                removing `math shift' on input line 140.
 
-[4] <multipartO2message.pdf, id=148, 845.1575pt x 597.23125pt>
+[4] <multipartO2message.pdf, id=149, 845.1575pt x 597.23125pt>
 File: multipartO2message.pdf Graphic file (type pdf)
 
 <use multipartO2message.pdf>
-Package pdftex.def Info: multipartO2message.pdf used on input line 149.
+Package pdftex.def Info: multipartO2message.pdf used on input line 150.
 (pdftex.def)             Requested size: 307.04979pt x 216.9806pt.
- [5 <./multipartO2message.pdf>]
-Overfull \hbox (0.57939pt too wide) in paragraph at lines 167--168
+
+Overfull \hbox (0.57939pt too wide) in paragraph at lines 168--169
 []\OT1/cmr/m/n/9 Verify that the fol-low-ing data (header body) be-longs to an 
 O$[]$ header. 
  []
 
+[5 <./multipartO2message.pdf>]
 (/usr/local/texlive/2016/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
@@ -649,13 +651,10 @@ File: lstlang1.sty 2015/06/04 1.6 listings language file
 (/usr/local/texlive/2016/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
 ) [6]
-Underfull \vbox (badness 1226) has occurred while \output is active []
-
- [7]
+[7]
 LaTeX Font Info:    Try loading font information for OML+cmr on input line 267.
 
-
-(/usr/local/texlive/2016/texmf-dist/tex/latex/base/omlcmr.fd
+ (/usr/local/texlive/2016/texmf-dist/tex/latex/base/omlcmr.fd
 File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <9> not available
@@ -675,7 +674,7 @@ Overfull \hbox (4.70105pt too wide) in paragraph at lines 300--301
 [][][][][][][][][][][][][][][] 
  []
 
-[9]
+
 Overfull \hbox (12.83235pt too wide) in paragraph at lines 307--307
 []\OT1/cmr/m/it/10 The Al-ice O2 soft-ware\OT1/cmr/m/n/10 . \OT1/cmr/m/sc/10 ur
 l\OT1/cmr/m/n/10 : []$\OT1/cmtt/m/n/10 https : / / github . com / AliceO2Group$
@@ -688,6 +687,7 @@ Overfull \hbox (4.80322pt too wide) in paragraph at lines 307--307
 un34 _
  []
 
+[9]
 
 Package biblatex Warning: No driver for entry type 'webpage'.
 (biblatex)                Using fallback driver on input line 306.
@@ -722,11 +722,11 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 308.
 Here is how much of TeX's memory you used:
  14409 strings out of 493014
  235736 string characters out of 6133351
- 673156 words of memory out of 5000000
+ 672156 words of memory out of 5000000
  17732 multiletter control sequences out of 15000+600000
  11460 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,8n,58p,1374b,1746s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,8n,58p,1374b,1750s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
@@ -743,7 +743,7 @@ ive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2016/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2016/te
 xmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on O2DataModel.pdf (10 pages, 242222 bytes).
+Output written on O2DataModel.pdf (10 pages, 237086 bytes).
 PDF statistics:
  320 PDF objects out of 1000 (max. 8388607)
  286 compressed objects within 3 object streams

@@ -28,11 +28,12 @@
 
 \title{ALICE \O2 data model proposal}
 
-\author{Mikolaj Krzewicki \and Sylvain Chapeland \and Roberto Divia \and Matthias Richter \and David Rohr}
-\date{
-for the CWG4 data model group.\\[2ex]
-\today
-}
+\author{CWG4}
+%\author{Mikolaj Krzewicki \and Sylvain Chapeland \and Roberto Divia \and Matthias Richter \and David Rohr}
+%\date{
+%for the CWG4 data model group.\\[2ex]
+%\today
+%}
 
 \maketitle
 
@@ -227,8 +228,7 @@ The \O2 data model does not impose any limitations on the data types exchanged b
 For higher level data types it usually means that they need to be serialized which penalizes performance (to a varying degree). A trade off has to be made between flexibility and performance based on the use case for a particular data type.
 
 \subsection{Data in memory}
-The recommendation is to use flat POD data types where performance and/or memory usage is critical. Flat data means natually contiguous data that does not require a serialization step and does not contain any process specific run time dependent information like virtual function table pointers or pointer/reference members.
-
+The recommendation is to use flat POD data types where performance and/or memory usage is critical, e.g. synchronous reconstruction and calibration, which needs to access and process all of the data.
 Outside of the critical path where relatively a low volume of data needs to be transported between devices, serialization schemes possibly impose acceptable overhead. The data model supports serialization schemes and facilitates the handling of serialization and deserialization of data transparently to user code.
 
 \subsection{Raw data formats}
@@ -237,7 +237,7 @@ Raw data formats will be determined by the readout hardware of the detectors.
 \subsection{Reconstructed data formats}
 
 \subsection{Persistent storage of time frame data}
-The in-memory data representation of header and payload buffers contains enough information to be stored on-disk directly as a sequence of buffers. The data represented by POD data are, however, not suitable for long term storage and need to be transformed to a portable and extensible format.
+The in-memory data representation of header and payload buffers contains enough information to be stored on-disk directly as a sequence of buffers. POD data are, however, not suitable for long term storage and need to be transformed to a portable and extensible format.
 
 In the modular \O2 design only a dedicated device would handle persistent storage making the translation steps from and to peristent storage format transparent to other devices which only need to deal with the in-memory format.
 
