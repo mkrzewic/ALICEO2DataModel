@@ -89,7 +89,7 @@ As discussed, a zero-copy approach also introduces a tight relationship between 
 
 \section{\O2 data flow}
 
-In this section: overview of the main data flow and the requirements on the data layout and formats needed to achieve the flow:
+In this section: overview of the main data flow and the requirements of the data layout and formats needed to achieve the flow:
 
 \subsection{First level processors}
 
@@ -129,21 +129,19 @@ In this section: overview of the main data flow and the requirements on the data
 
 
 \section{Message queue based communication}
-The move to a multi-process, message queue based system is a large departure from the current monolithic ALICE offline data and computing model. It is, however, conceptually close to the modular processing model of the ALICE HLT. The decentralized messaging queue concept of FairMQ simplifies it by integrating the data transport layer into a library and eliminating the separation between dedicated transport and processing devices (or processes).
+The move to a multi-process, message queue based system is a large departure from the current monolithic ALICE offline data and computing model. It is, however, conceptually close to the modular processing model of the ALICE HLT. The decentralized messaging queue concept of FairMQ simplifies it by integrating the data transport layer into a library and eliminating the separation between dedicated transport- and processing devices (or processes).
 In contrast to the managed and synchronized data flow in the HLT framework, message queue based systems are fully asynchronous. Messages are asynchronously queued on both the sending and receiving ends and multiplexed between the different connections without queue ordering guarantees. Devices receiving data are presented with an input queue where messages originating from different sources are interleaved in an non-deterministic order. For dealing with multiple logically associated data buffers, additional lower level abstractions are needed to maintain their association across transport boundaries without incurring excessive overhead.
 
 Vectored IO (also referred to as scatter/gather IO in the POSIX specification in \cite{posix}) is an important feature when dealing with multiple data buffers as it allows, in principle, to avoid the cost associated with serializing a data set into a single IO buffer before scheduling it's transport.
-A form of vectored IO is provided in FairMQ as multi-part messages. A multi-part message consists of a structure (a vector) referencing multiple independent buffers. The multi-part message (and the referenced buffers) is transported atomically while preserving the ordering of the references.
+Vectored IO is provided in FairMQ in the form of multi-part messages. A multi-part message consists of a structure (a vector) referencing multiple independent buffers. The multi-part message (and the referenced buffers) is transported atomically while preserving the ordering of the references.
 
-The multi-part approach, in addition to minimizing the resource strain associated with IO buffer construction and/or data serialization, also by construction reduces the need for (re-)synchronisation and event building; data fragments once associated to a single logical unit (e.g. a time frame) remain that way throughout the entire chain regardless of the data transport topology. Another benefit is that additional data parts can be attached or removed by other processing devices without copy overhead at any point of the processing chain.
+The multi-part approach, in addition to minimizing the resource strain associated with IO buffer construction and/or data serialization, also by construction reduces the need for (re-)synchronisation and event building; data fragments once associated to a single logical unit (e.g. a time frame) remain that way throughout the entire chain regardless of the data transport topology. Another benefit is that additional data parts can be attached to or removed from the data set by other processing devices without copy overhead at any point of the processing chain.
 
 \section{\O2 message structure}
 
 Each buffer associated to a single data set (e.g. a time frame) is described by metadata containing the information about e.g. the content type of the associated buffer, it's origin and serialization strategy.
 
 The \O2 message consists of a sequence of metadata-payload pairs of message parts contained within a multi-part message. In order to allow efficient payload classification, each buffer is described by metadata contained in a separate message part. Since FairMQ preserves the ordering of the parts, the natural choice is to precede each data part with the associated metadata part in the message, as illustrated in figure \ref{fig:o2message}. 
-
-Since the \O2 message is a well-defined vector of references to the transported buffers, navigation is straightforward as it only involves access to the metadata via well-defined locations within the vector.
 
 \begin{figure}[h]
   \centering
@@ -160,6 +158,8 @@ Storing the metadata and data payload in separate buffers offers several advanta
   \item The content of the data buffers, once produced by the hardware or a processing device, is immutable to other devices. Since the metadata is encapsulated in a separate buffer, it is possible to add additional information to the metadata (e.g. quality control status, contained in an additional header in the header stack, see section \ref{sec:header}) with minimal cost and without modifying the payload downstream from the data producer.
 \end{itemize}
 
+Since the \O2 message is a well-defined vector of references to the transported buffers, navigation is straightforward as it only involves access to the metadata located at well-defined locations within the vector.
+
 \section{Metadata format}\label{sec:header}
 
 The O2 metadata consists of a contiguous buffer containing a sequence of headers (header stack).
@@ -175,7 +175,9 @@ The byte representation of a header consists of a user defined body following a 
 
 The binary format of BaseHeader is fixed and can not be extended to guarantee consistent decoding of header information in the future. All metadataneeds to follow the bytes representing the BaseHeader. The BaseHeader struct shall never be used directly, it only aids the construction and decoding of metadata.
 
-The header stack should contain at least the standard DataHeader struct describing the basic payload properties common to all payloads. The DataHeader representation starts with the BaseHeader followed by bytes representing:
+\subsection{DataHeader}
+The header stack of all the data blocks should contain at least the standard DataHeader struct describing the basic payload properties common to all payloads.
+The DataHeader representation starts with the BaseHeader followed by bytes representing:
 \begin{itemize}
   \item The functional data description uniquely determining the data type contained in the payload.
   \item The payload serialization method (e.g. ROOT, FlatBuffers, none) complementing the data description field.
@@ -184,7 +186,7 @@ The header stack should contain at least the standard DataHeader struct describi
   \item The payload buffer size\footnote{This is not strictly necessary online as the transport framework keeps track of the buffer sizes. Keeping this information is the header is useful for persistent storage and debugging purposes.}.
 \end{itemize}
 
-The binary format of DataHeader is fixed to ensure efficient access without the need for special decoding steps. The contents can only possibly be extended by appending additional data members and incrementing the version number to assure backward compatibility.
+The binary format of DataHeader is fixed to ensure efficient access without the need for special decoding steps. The contents can only possibly be extended by appending additional data members and incrementing the version number to ensure backward compatibility.
 
 Other headers can be defined similarly to DataHeader and included in the header stack. Examples include trigger information headers for triggered detector data, object name headers for ROOT objects used in quality control etc.
 
@@ -224,7 +226,7 @@ struct DataHeader
 
 \section{Data formats}
 \comment{
-The \O2 data model does not impose any limitations on the data types exchanged between devices. The only constraint from the data transport layer is that the trasported payload must be contiguous in memory. In addition, the buffer for the payload should be allocated by the transport layer in a memory region apropriate for the chosen transport method.
+The \O2 data model does not impose any limitations on the data types exchanged between devices. The only constraint from the data transport layer is that the transported payload must be contiguous in memory. In addition, to , the buffer for the payload should be allocated by the transport layer in a memory region apropriate for the chosen transport method.
 For higher level data types it usually means that they need to be serialized which penalizes performance (to a varying degree). A trade off has to be made between flexibility and performance based on the use case for a particular data type.
 
 \subsection{Data in memory}
@@ -251,31 +253,37 @@ The contents of the AOD data used for end user physics data analysis is being pr
 \section{Interfaces}
 
 \comment{
-A minimal reference set of interfaces providing type-safe construction and access to the metadata-payload protocol of the \O2 message is developed.
+A minimal reference set of interfaces providing type-safe construction, access and navigation of the metadata-payload protocol of the \O2 message is developed.
 This complete, but minimal working set is meant to be augmented by higher level interfaces based of the needs of the community.
 }
 
 \subsection{Metadata access interface}
 
-Access to data members in the headers is protected by strongly typed interfaces. Initialization can only be performed using predefined constants unless the data member being set allows for arbitrary values explicitly; consistency is then assured by the type system at compile time.
+Construction and access to data contained in the header structures is protected by strongly typed interfaces.
+Initialization can only be performed using predefined constants unless the data member being set allows for arbitrary values explicitly; consistency is then ensured by the type system at compile time.
 
-Inspection of header information contained in a metadata buffer is also implemented in a type safe way.
+\subsubsection{Examples}
+Construction of a header stack containing an arbitrary number of headers is provided by the Header::Stack class.
+The constructor is a variadic template, taking as arguments references to the headers or that are to be placed in the header stack.
+Header::Stack is a move-only type to guarantee resource safety.
 
-\subsubsection{Example}
-The user may check if a given buffer contains the desired header information in a type safe way. If the desired header is of type DataHeader, a call to:
+The user may check if a given buffer expected to hold the metadata contains the desired header information in a type safe way. If the desired header is of type DataHeader, a call to:
 \begin{lstlisting}
 DataHeader* header = Header::get<DataHeader>(buffer);
 \end{lstlisting}
 
 will yield a valid pointer if a header of type DataHeader is part of the header stack inside the buffer pointed to by the buffer pointer.
 
-\subsection{Message navigation}
+\subsection{Message construction and navigation}
+
+
+
 The base functionality of a device running in the \O2 system is contained in the FairMQDevice class. This is a generic class providing all the necessary logic to support the \O2 system and data model, like control abstractions, a state machine and multi-part messaging. FairMQ support for the multi-part messaging is, however, unaware of the \O2 specific message layout and the header to payload association. In order to enforce a consistent handling of the metadata the necessary interface is implemented on top of FairMQDevice as O2device.
 
-Each device in the \O2 system should inherit from the O2device class in order to be able to use the data model. Interfaces are provided that insure consistency in the handling of the data and associated metadata.
+Each device in the \O2 system should inherit from the O2device class in order to be able to use the data model consistently. A strongly typed interface ensures consistency in the handling of the data and associated metadata.
 
 \subsection{Examples}
-To construct a message, the AddMessage(...) family of methods should be used to insure correct association of metadata to payloads, e.g. in the simplest case:
+To construct a message, the AddMessage(...) family of methods should be used to guarantee correct association of metadata to payloads, e.g. in the simplest case:
 \begin{lstlisting}
 bool AddMessage( FairMQParts& message,
                  AliceO2::Header::Block&& headerStack,
