@@ -26,7 +26,7 @@
 
 \begin{document}
 
-\title{ALICE \O2 data model proposal}
+\title{ALICE \O2 data model and data layout proposal}
 
 \author{CWG4}
 %\author{Mikolaj Krzewicki \and Sylvain Chapeland \and Roberto Divia \and Matthias Richter \and David Rohr}
@@ -37,7 +37,7 @@
 
 \maketitle
 
-\abstract{This note presents a proposal for the ALICE \O2 data model. A base data layout and metadata format that allow for
+\abstract{This note presents a proposal for the ALICE \O2 data model and the in-memory data layout. A base data layout and metadata format that allow for
 efficient resource use are proposed. Application of the data model to online/offline data processing and quality control is discussed.}
 
 \section{Introduction}
@@ -52,7 +52,7 @@ The Alfa framework provides data transport and synchronisation primitives via th
 \section{Data model requirements}
 The data processed by the devices distributed in the \O2 system comprise buffers originating from the detector hardware (raw data) and the processing devices (containing derived data). The data fragments belonging to a logical data unit are grouped into a data set, e.g. a (sub-) time frame. A (sub-) time frame contains raw data associated to a period of data taking (typically several tens of ms corresponding to O(1000) interactions, as dictated by the heartbeat trigger \cite{O2readout}) and/or the results of the processing of these data. In addition, any data that might be necessary to describe the data set can be added to the logical group.
 
-In the unified online-offline software model also derived data is handled within the same software framework. \O2 devices dedicated to quality control (QC) and physics analysis should use the same set of interfaces as devices in the synchronous data reconstruction and calibration chain. The requirements for the data used in these tasks tend to be different from the online components: high level abstractions and ease of use (of e.g. ROOT\cite{root} objects), despite the additional overhead, is sometimes preferred to high performance low-level data structures. Transparent support for high- and low level data structures is part of the proposed data model.
+In the unified online-offline software model also derived data is handled within the same software framework. \O2 devices dedicated to quality control (QC) and physics analysis should use the same set of interfaces as devices in the synchronous data reconstruction and calibration chain. The requirements for the data used in these tasks tend to be different from the online components: high level abstractions and ease of use (of e.g. ROOT\cite{root} objects), despite the additional overhead, is sometimes preferred to high performance low-level data structures. Transparent support for high- and low level data structures is part of the proposed data layout.
 
 The mix of various data formats and their binary representations calls for a well defined and flexible metadata scheme which will allow for efficient description of each data part and efficient navigation through the data set.
 
