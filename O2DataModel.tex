@@ -26,7 +26,7 @@
 
 \begin{document}
 
-\title{ALICE \O2 data model and data layout proposal}
+\title{ALICE \O2 data model proposal}
 
 \author{CWG4}
 %\author{Mikolaj Krzewicki \and Sylvain Chapeland \and Roberto Divia \and Matthias Richter \and David Rohr}
@@ -47,7 +47,7 @@ The design aims at high data throughput and parallelism using a multiprocess mod
 It does not, however, exclude the use of multithreading and other forms of concurrent processing inside of individual processes.
 
 The data exchange between processes running within the \O2 system (called \O2 devices) is taken care of by the ALICE-FAIR (Alfa ) framework \cite{alfa}. Since this is the main communication mechanism foreseen for data exchange, it effectively serves the role of an API between the devices.
-The Alfa framework provides data transport and synchronisation primitives via the FairMQ message queue library. FairMQ messages consist of raw memory buffers which are asynchronously queued and atomically delivered.
+The Alfa framework provides data transport and synchronisation primitives via the FairMQ message queue library. FairMQ messages consist of contiguous memory buffers which are asynchronously queued and atomically delivered.
 
 \section{Data model requirements}
 The data processed by the devices distributed in the \O2 system comprise buffers originating from the detector hardware (raw data) and the processing devices (containing derived data). The data fragments belonging to a logical data unit are grouped into a data set, e.g. a (sub-) time frame. A (sub-) time frame contains raw data associated to a period of data taking (typically several tens of ms corresponding to O(1000) interactions, as dictated by the heartbeat trigger \cite{O2readout}) and/or the results of the processing of these data. In addition, any data that might be necessary to describe the data set can be added to the logical group.
@@ -108,30 +108,30 @@ The mix of various data formats and their binary representations calls for a wel
 A single uncompressed time frame data volume is expected to be of the order of tens of gigabytes which constitutes a significant fraction of the amount of memory foreseen for the machines in the \O2 system. The data model facilitates data exchange approaches that minimize resource use, i.e. avoid unnecessary copies of data and serialization/de-serialization overhead.
 
 Traditionally, in monolithic designs where all processing is performed inside a single process, data exchange between logical processing units (i.e. subroutines and threads) is supported at the programming language semantics level using parameter passing (by value or by reference).
-Subroutines can efficiently exchange data by passing references (usually pointers) to resources available in the uniform virtual memory space available to a process.
+Subroutines can efficiently exchange data by passing references (usually pointers) to resources available in the flat virtual memory space available to a process.
 A flat process memory model also enables fully transparent and efficient compiler support of higher level abstractions like virtual inheritance in the C++ language, usually implemented by (hidden) references to internal metadata (e.g. a virtual method table).
 
-In the \O2 multi-processing model data needs to be exchanged between devices running as separate processes. This scenario is not covered by the core language (in the case of C++) and needs to be addressed using additional abstraction layers. In the most general case the data to be shared is copied into a transport buffer a copy of which is made available to the receiving process by the operating system using various interprocess or network communication mechanisms e.g. pipes or (network) sockets. 
-If the data structure is complex, i.e. not contiguous and/or refers to other data structures (contains pointer/reference members) it needs to be copied (serialized) to a contiguous buffer including the metadata needed to recreate the structure in the receiving process memory.
+In the \O2 multi-processing model data needs to be exchanged between devices running as separate processes. This scenario is not covered by the core language (in the case of C++) and needs to be addressed using additional abstraction layers. In the case of a traditional interprocess communication scheme the data to be shared is copied into a transport buffer a copy of which is made available to the receiving process by the operating system using various interprocess or network communication mechanisms e.g. pipes or (network) sockets. 
+If the data structure is complex, i.e. non-contiguous and/or refers to other data structures (contains pointer/reference members) it needs to be copied (serialized) to a contiguous buffer including the metadata needed to recreate the structure in the receiving process memory.
 The buffer then has to be de-serialized by each individual consumer.
 
 Various libraries exist that provide this functionality and try to optimize various aspects of the serialization and de-serialization process, e.g. google flatbuffers\cite{flatbuffers} allow zero-copy access to data in the serialized buffer with only a minimal (indirection) overhead to ensure portability and schema evolution. Serialization, however always incurs CPU overhead and data duplication as additional resources need to be allocated for the target buffer.
 
-In the case of devices separated by a network interface (e.g. running on different machines in a network) a data copy over the network is inevitable. The copy overhead can, however, be minimized using modern networking technologies utilizing e.g. remote direct memory access (RDMA).
+In the case of devices separated by a network interface (e.g. running on different machines in a network) a data copy over the network is inevitable. The copy overhead can, however, be minimized using modern networking technologies offering zero-copy functionality, e.g. remote direct memory access (RDMA).
 
 For processes running on the same machine it is possible to use shared memory which can be accessed directly by more than one process.
 Shared memory segments are mapped by the operating system at arbitrary base addresses within the process virtual memory. Data structures in such memory segments cannot contain absolute references (i.e. pointers) as they depend on the address space layout details which in principle is different for each process.
 That excludes straightforward use of structures that contain reference data members and/or higher level language features (like virtual inheritance) as these in general are implemented using references to internal, process specific metadata.
 Shared memory regions are also not usually covered by the standard resource allocation mechanisms provided by the language and the resource management needs to be handled via additional libraries.
 
-From the communication, or data transport perspective, the use of either transport buffers for socket-like communication or special memory regions like shared memory is similar. In both cases separate processes access the data inside a buffer starting at an arbitrary base address, imposing similar limitations on the data representation.
-The choice is to either serialize/de-serialize high level data for transport when the cost of this process is acceptable, or avoid data duplication and the CPU overhead by constructing the data in a fully self-contained format directly in a buffer that is suitable for the selected transport mechanism. In the latter case, since the transport mechanism is chosen at run time, all memory allocations and lifetime management need to be performed by the transport layer explicitly.
+From the communication, or data transport perspective, the use of either message buffers or special memory regions like shared memory is similar: in both cases separate processes access the data inside a buffer starting at an arbitrary base address, imposing similar limitations on the data representation.
+The choice is to either serialize/de-serialize high level data for transport when the cost of this process is acceptable, or avoid data duplication and the CPU overhead by constructing the data in a fully self-contained format directly in a buffer that is suitable for the selected transport mechanism. In the latter case, since the transport mechanism is chosen at run time, memory allocations and lifetime management need to be performed by the transport layer explicitly.
 
 Additional constraints on data layout and representation are given by the machine architecture. The approach described here is only possible if all machines involved in the processing chain have the same internal binary data representation with regards to endianness and data alignment. In this case data produced on one machine can be accessed by an other directly in the transport buffer. Otherwise the data need to be converted to a suitable binary representation; this can in principle be handled transparently by either the transport layer or the data access interface, at a cost.
 
-In view of the large volume of data that needs to be transported and processed by the multi-process based \O2 system the data exchange cost should be minimized. To achieve optimal performance the in-memory (and in general in-buffer) representation of data should allow a zero-copy approach. This is only possible when the data contained in the buffer are flat, i.e. are of POD type (plain old data): a scalar or a class type with no virtual base classes of functions that has no members of reference type or an array of such type. For in-depth POD description see e.g.\cite{POD}.
+In view of the large volume of data that needs to be processed by the multi-process based \O2 system, the data exchange cost should be minimized. To achieve optimal performance the in-memory (and in general in-buffer) representation of data should allow a zero-copy approach. This is only possible when the data contained in the buffer are flat, i.e. are of POD type (plain old data): a scalar or a class type with no virtual base classes of functions that has no members of reference type or an array of such type. For in-depth POD description see e.g.\cite{POD}.
 
-A zero-copy approach introduces an explicit relationship between the data model and the transport layer. The need for explicit transport-driven memory allocation and life-time management should be expressed in the data model programming interface consistently.
+A zero-copy approach introduces an explicit relationship between the data model and the transport layer capabilities. The need for explicit transport-driven memory allocation and life-time management should be expressed in the data model programming interface consistently.
 
 \section{Message queue based communication}
 The move to a multi-process, message queue based system is a large departure from the current monolithic ALICE offline data and computing model. It is, however, conceptually close to the modular processing model of the ALICE HLT.
@@ -150,11 +150,13 @@ In the case zero-copy vectored IO is not supported by the transport layer, compr
 Another option, if a zero-copy approach is needed, is to prevent the queues from multiplexing and load balancing messages to/from different endpoints by requiring socket-like point-to-point topologies; this, however, introduces a dependency of the data model on runtime configuration and excludes most of the high level features provided by current FairMQ backends, most notably the messaging patterns. Other options may of course exist.
 }
 
-\section{\O2 message structure}
+\section{\O2 data protocol}
 
-Each buffer associated to a single data set is described by metadata containing the information about e.g. the content type of the associated buffer, it's origin and serialization strategy. In order to consistently support buffers containing raw data, serialized representations and flat structures while allowing for a zero-copy approach, the metadata is placed in a separate message, logically associated to the actual payload.
+The exchange of data in the form of message buffers containing payloads of various types some of which may be flat and others possibly serialized outside of the built-in type system calls for a uniform metadata model which will allow efficient selection (navigation) and type safety within a single software framework.
+Each buffer associated to a single data set is described by metadata containing the information about e.g. the content type of the associated buffer, it's origin and serialization strategy. In order to consistently support buffers containing raw data, serialized representations and flat structures, the metadata is encoded separately from the associated payload.
+If vectored IO is supported, the metadata can be contained within a separate message part and the transport layer will ensure the association of the metadata and payload buffers. Otherwise, the metadata can be placed inside (at the beginning) of the message buffer, which in general results in a serialization step where both metadata and the buffer in question needs to be copied to a single target buffer.
 
-The \O2 message consists of a sequence of metadata-payload pairs of messages referenced from a multi-part message vector as illustrated in figure \ref{fig:o2message}.
+The \O2 message consists of a sequence of metadata-payload pairs referenced from a multi-part message vector as illustrated in figure \ref{fig:o2message}.
 
 \begin{figure}[h]
   \centering
@@ -163,11 +165,11 @@ The \O2 message consists of a sequence of metadata-payload pairs of messages ref
   \label{fig:o2message} 
 \end{figure}
 
-Storing the metadata and data payload in separate buffers offers several advantages:
+Storing the metadata and data payload in separate message buffers (if supported) offers several advantages:
 \begin{itemize}
-  \item Since the metadata is separated from the payload already at transport level, efficient navigation is possible as only the (small) metadata parts need to be inspected at well defined locations in the message vector.
+  \item Since the metadata is separated from the payload already at transport level, efficient navigation is possible without additional overhead as only the (small) metadata parts need to be inspected at well defined locations in the message vector.
+  \item The content of the payload buffers, once produced by the hardware or a processing device, is by default immutable to other devices. Since the metadata is encapsulated in a separate buffer, it is possible to add additional information to the metadata (e.g. quality control status, contained in an additional header in the header stack, see section \ref{sec:header}) with minimal cost and without modifying the payload downstream from the data producer.
   \item Metadata can be inspected separately from the payload, there is no need to potentially de-serialize the payload.
-  \item The content of the payload buffers, once produced by the hardware or a processing device, is immutable to other devices. Since the metadata is encapsulated in a separate buffer, it is possible to add additional information to the metadata (e.g. quality control status, contained in an additional header in the header stack, see section \ref{sec:header}) with minimal cost and without modifying the payload downstream from the data producer.
 \end{itemize}
 
 \section{Metadata format}\label{sec:header}
