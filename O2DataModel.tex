@@ -150,13 +150,13 @@ In the case zero-copy vectored IO is not supported by the transport layer, compr
 Another option, if a zero-copy approach is needed, is to prevent the queues from multiplexing and load balancing messages to/from different endpoints by requiring socket-like point-to-point topologies; this, however, introduces a dependency of the data model on runtime configuration and excludes most of the high level features provided by current FairMQ backends, most notably the messaging patterns. Other options may of course exist.
 }
 
-\section{\O2 data protocol}
+\section{\O2 time frame model}
 
 The exchange of data in the form of message buffers containing payloads of various types some of which may be flat and others possibly serialized outside of the built-in type system calls for a uniform metadata model which will allow efficient selection (navigation) and type safety within a single software framework.
 Each buffer associated to a single data set is described by metadata containing the information about e.g. the content type of the associated buffer, it's origin and serialization strategy. In order to consistently support buffers containing raw data, serialized representations and flat structures, the metadata is encoded separately from the associated payload.
 If vectored IO is supported, the metadata can be contained within a separate message part and the transport layer will ensure the association of the metadata and payload buffers. Otherwise, the metadata can be placed inside (at the beginning) of the message buffer, which in general results in a serialization step where both metadata and the buffer in question needs to be copied to a single target buffer.
 
-The \O2 message consists of a sequence of metadata-payload pairs referenced from a multi-part message vector as illustrated in figure \ref{fig:o2message}.
+The \O2 message consists of a sequence of metadata-payload (effectively key-value) pairs referenced from an associative container. In case the transport provides multi-part messaging, the container can be a vector of message parts as illustrated in figure \ref{fig:o2message}.
 
 \begin{figure}[h]
   \centering
@@ -172,7 +172,7 @@ Storing the metadata and data payload in separate message buffers (if supported)
   \item Metadata can be inspected separately from the payload, there is no need to potentially de-serialize the payload.
 \end{itemize}
 
-\section{Metadata format}\label{sec:header}
+\section{Metadata model}\label{sec:header}
 
 The O2 metadata consists of a contiguous buffer containing a sequence of headers (header stack).
 
