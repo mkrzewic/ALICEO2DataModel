@@ -26,7 +26,7 @@
 
 \begin{document}
 
-\title{ALICE \O2 data model proposal}
+\title{ALICE \O2 timeframe and metadata model proposal}
 
 \author{CWG4}
 %\author{Mikolaj Krzewicki \and Sylvain Chapeland \and Roberto Divia \and Matthias Richter \and David Rohr}
@@ -136,7 +136,7 @@ A zero-copy approach introduces an explicit relationship between the data model 
 \section{Message queue based communication}
 The move to a multi-process, message queue based system is a large departure from the current monolithic ALICE offline data and computing model. It is, however, conceptually close to the modular processing model of the ALICE HLT.
 In the \O2 system messages are asynchronously queued on both the sending and receiving ends of a connection between processing units (devices) and multiplexed between the different connections without queue ordering guarantees. On the output, the messages might be load balanced among the connected endpoints, depending on the messaging pattern chosen at runtime.
-Messaging queues (like FairMQ) present a relatively high level interface, where connection details are not exposed, the application is completely agnostic about the origins or destinations of data as that is considered runtime configuration.
+Messaging queues (like FairMQ) present a relatively high level interface, where connection details are not exposed, the application is completely agnostic about the origins or destinations of data; that is considered runtime configuration.
 Devices receiving data are presented with an input queue where messages originating from different sources are interleaved in an non-deterministic order. Output data might non-deterministically be load balanced among endpoints depending on the messaging pattern.
 For dealing with multiple logically associated data buffers, additional abstractions are needed to maintain their association across transport boundaries without incurring excessive overhead.
 
@@ -154,9 +154,9 @@ Another option, if a zero-copy approach is needed, is to prevent the queues from
 
 The exchange of data in the form of message buffers containing payloads of various types some of which may be flat and others possibly serialized outside of the built-in type system calls for a uniform metadata model which will allow efficient selection (navigation) and type safety within a single software framework.
 Each buffer associated to a single data set is described by metadata containing the information about e.g. the content type of the associated buffer, it's origin and serialization strategy. In order to consistently support buffers containing raw data, serialized representations and flat structures, the metadata is encoded separately from the associated payload.
-If vectored IO is supported, the metadata can be contained within a separate message part and the transport layer will ensure the association of the metadata and payload buffers. Otherwise, the metadata can be placed inside (at the beginning) of the message buffer, which in general results in a serialization step where both metadata and the buffer in question needs to be copied to a single target buffer.
+The metadata is contained within a separate buffer and the framework layer ensures the association of the metadata to the payload buffer.
 
-The \O2 message consists of a sequence of metadata-payload (effectively key-value) pairs referenced from an associative container. In case the transport provides multi-part messaging, the container can be a vector of message parts as illustrated in figure \ref{fig:o2message}.
+The \O2 message consists of a sequence of metadata-payload (effectively key-value) pairs referenced from an associative container. In case the transport provides multi-part messaging, the underlying container can be a vector of message parts as illustrated in figure \ref{fig:o2message}.
 
 \begin{figure}[h]
   \centering
